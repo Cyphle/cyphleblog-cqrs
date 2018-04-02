@@ -27,6 +27,6 @@ public class OrderTableTest {
     // Then
     SearchClientTableQuery query = new SearchClientTableQuery(client.getName());
     List<Table> table = searchClientTableQueryHandler.handle(query);
-    assertThat(table).isNotNull();
+    assertThat(table).hasSize(1);
   }
 }
