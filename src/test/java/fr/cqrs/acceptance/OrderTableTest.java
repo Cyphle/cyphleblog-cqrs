@@ -6,6 +6,7 @@ import fr.cqrs.domain.command.GetTableCommandHandler;
 import fr.cqrs.domain.query.SearchClientTableQuery;
 import fr.cqrs.domain.query.SearchClientTableQueryHandler;
 import fr.cqrs.domain.valueobjects.Client;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,6 +16,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OrderTableTest {
   private SearchClientTableQueryHandler searchClientTableQueryHandler;
   private GetTableCommandHandler getTableCommandHandler;
+
+  @Before
+  public void setUp() throws Exception {
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler();
+    getTableCommandHandler = new GetTableCommandHandler();
+  }
 
   // En tant que client, je souhaite avoir une table afin de pouvoir être servi.
   @Test
