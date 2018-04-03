@@ -1,7 +1,9 @@
 package fr.cqrs.utils;
 
+import java.util.UUID;
+
 public class UUIDGenerator implements IdGenerator {
   public String generate() {
-    throw new UnsupportedOperationException();
+    return UUID.randomUUID().toString();
   }
 }
