@@ -27,7 +27,7 @@ public class OrderTableTest {
   public void setUp() throws Exception {
     idGenerator = new UUIDGenerator();
     tableRepository = new TableRepositoryImpl();
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler();
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
   }
 

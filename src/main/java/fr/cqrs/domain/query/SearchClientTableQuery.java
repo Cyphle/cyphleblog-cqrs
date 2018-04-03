@@ -8,4 +8,8 @@ public class SearchClientTableQuery implements Query {
   public SearchClientTableQuery(Name clientName) {
     this.clientName = clientName;
   }
+
+  public Name getClientName() {
+    return clientName;
+  }
 }
