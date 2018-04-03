@@ -8,4 +8,8 @@ public class GetTableCommand implements Command {
   public GetTableCommand(Name clientName) {
     this.clientName = clientName;
   }
+
+  public Name getClientName() {
+    return clientName;
+  }
 }

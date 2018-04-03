@@ -2,28 +2,28 @@ package fr.cqrs.domain.valueobjects;
 
 import java.util.Objects;
 
-public class Name {
-  private String name;
+public class Id {
+  private String id;
 
-  private Name(String name) {
-    this.name = name;
+  private Id(String id) {
+    this.id = id;
   }
 
-  public static Name of(String name) {
-    return new Name(name);
+  public static Id of(String id) {
+    return new Id(id);
   }
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Name name1 = (Name) o;
-    return Objects.equals(name, name1.name);
+    Id id1 = (Id) o;
+    return Objects.equals(id, id1.id);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(name);
+    return Objects.hash(id);
   }
 }
