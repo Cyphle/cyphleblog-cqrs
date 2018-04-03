@@ -18,6 +18,10 @@ public class Table {
     return new Table(id, clientName);
   }
 
+  public boolean hasClient(Name clientName) {
+    return this.clientName.equals(clientName);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
