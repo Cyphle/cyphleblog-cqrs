@@ -14,12 +14,16 @@ public class Table {
     this.clientName = clientName;
   }
 
-  public static Table of(Id id, Name clientName) {
-    return new Table(id, clientName);
+  public Id getAggregateId() {
+    return id;
   }
 
   public boolean hasClient(Name clientName) {
     return this.clientName.equals(clientName);
+  }
+
+  public static Table of(Id id, Name clientName) {
+    return new Table(id, clientName);
   }
 
   @Override
