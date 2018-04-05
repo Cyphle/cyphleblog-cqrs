@@ -1,12 +1,12 @@
 package fr.cqrs.acceptance;
 
 import fr.cqrs.infra.repositories.TableRepositoryImpl;
-import fr.cqrs.domain.aggregate.Table;
-import fr.cqrs.domain.command.GetTableCommand;
-import fr.cqrs.domain.command.GetTableCommandHandler;
-import fr.cqrs.domain.query.SearchClientTableQuery;
-import fr.cqrs.domain.query.SearchClientTableQueryHandler;
-import fr.cqrs.domain.valueobjects.Client;
+import fr.cqrs.command.aggregate.Table;
+import fr.cqrs.command.commands.GetTableCommand;
+import fr.cqrs.command.handlers.GetTableCommandHandler;
+import fr.cqrs.query.queries.SearchClientTableQuery;
+import fr.cqrs.query.handlers.SearchClientTableQueryHandler;
+import fr.cqrs.command.valueobjects.Client;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.utils.IdGenerator;
 import fr.cqrs.utils.UUIDGenerator;

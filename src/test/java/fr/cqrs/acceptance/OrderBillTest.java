@@ -1,16 +1,16 @@
 package fr.cqrs.acceptance;
 
-import fr.cqrs.domain.Quantity;
-import fr.cqrs.domain.aggregate.Table;
-import fr.cqrs.domain.command.GetTableCommand;
-import fr.cqrs.domain.command.GetTableCommandHandler;
-import fr.cqrs.domain.command.OrderProductCommand;
-import fr.cqrs.domain.command.OrderProductCommandHandler;
-import fr.cqrs.domain.query.GetTableBillQuery;
-import fr.cqrs.domain.query.GetTableBillQueryHandler;
-import fr.cqrs.domain.query.SearchClientTableQuery;
-import fr.cqrs.domain.query.SearchClientTableQueryHandler;
-import fr.cqrs.domain.valueobjects.*;
+import fr.cqrs.command.valueobjects.*;
+import fr.cqrs.common.Quantity;
+import fr.cqrs.command.aggregate.Table;
+import fr.cqrs.command.commands.GetTableCommand;
+import fr.cqrs.command.handlers.GetTableCommandHandler;
+import fr.cqrs.command.commands.OrderProductCommand;
+import fr.cqrs.command.handlers.OrderProductCommandHandler;
+import fr.cqrs.query.queries.GetTableBillQuery;
+import fr.cqrs.query.handlers.GetTableBillQueryHandler;
+import fr.cqrs.query.queries.SearchClientTableQuery;
+import fr.cqrs.query.handlers.SearchClientTableQueryHandler;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.infra.repositories.TableRepositoryImpl;
 import fr.cqrs.utils.IdGenerator;

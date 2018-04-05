@@ -1,7 +1,7 @@
 package fr.cqrs.infra.repositories;
 
-import fr.cqrs.domain.aggregate.Table;
-import fr.cqrs.domain.valueobjects.Id;
+import fr.cqrs.command.aggregate.Table;
+import fr.cqrs.command.valueobjects.Id;
 
 import java.util.ArrayList;
 import java.util.List;
