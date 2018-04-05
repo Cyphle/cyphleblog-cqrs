@@ -1,16 +1,16 @@
 package fr.cqrs.acceptance;
 
+import fr.cqrs.domain.Quantity;
 import fr.cqrs.domain.aggregate.Table;
 import fr.cqrs.domain.command.GetTableCommand;
 import fr.cqrs.domain.command.GetTableCommandHandler;
 import fr.cqrs.domain.command.OrderProductCommand;
 import fr.cqrs.domain.command.OrderProductCommandHandler;
-import fr.cqrs.domain.query.GetTableOrdersQuery;
-import fr.cqrs.domain.query.GetTableOrdersQueryHandler;
+import fr.cqrs.domain.query.GetTableBillQuery;
+import fr.cqrs.domain.query.GetTableBillQueryHandler;
 import fr.cqrs.domain.query.SearchClientTableQuery;
 import fr.cqrs.domain.query.SearchClientTableQueryHandler;
-import fr.cqrs.domain.valueobjects.Name;
-import fr.cqrs.domain.valueobjects.Product;
+import fr.cqrs.domain.valueobjects.*;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.infra.repositories.TableRepositoryImpl;
 import fr.cqrs.utils.IdGenerator;
@@ -22,13 +22,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrderProductTest {
+public class OrderBillTest {
   private GetTableCommandHandler getTableCommandHandler;
   private TableRepository tableRepository;
   private IdGenerator idGenerator;
   private SearchClientTableQueryHandler searchClientTableQueryHandler;
   private OrderProductCommandHandler orderProductCommandHandler;
-  private GetTableOrdersQueryHandler getTableOrdersQueryHandler;
+  private GetTableBillQueryHandler getTableBillQueryHandler;
 
   @Before
   public void setUp() throws Exception {
@@ -37,23 +37,26 @@ public class OrderProductTest {
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
     searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
-    getTableOrdersQueryHandler = new GetTableOrdersQueryHandler(tableRepository);
+    getTableBillQueryHandler = new GetTableBillQueryHandler(tableRepository);
 
     GetTableCommand command = new GetTableCommand(Name.of("John Doe"));
     getTableCommandHandler.handle(command);
   }
 
-  // En tant que client, je souhaite commander (une bière et une planche mixte) afin de me ressourcer.
+  // En tant que client, je souhaite commander la note afin de régler mon dû.
   @Test
-  public void should_order_a_table_in_order_to_get_served() throws Exception {
+  public void should_order_the_bill() throws Exception {
     // Given
     Table table = searchClientTableQueryHandler.handle(new SearchClientTableQuery(Name.of("John Doe"))).get(0);
     // When
     OrderProductCommand command = new OrderProductCommand(table.getAggregateId(), Product.BEER);
     orderProductCommandHandler.handle(command);
     // Then
-    GetTableOrdersQuery query = new GetTableOrdersQuery(table.getAggregateId());
-    List<Product> orders = getTableOrdersQueryHandler.handle(query);
-    assertThat(orders).contains(Product.BEER);
+    GetTableBillQuery query = new GetTableBillQuery(table.getAggregateId());
+    List<Bill> bill = getTableBillQueryHandler.handle(query);
+    assertThat(bill).hasSize(1);
+    assertThat(bill.get(0).getEntries()).contains(
+            BillEntry.of(Product.BEER, Quantity.of(1), Money.of(6))
+    );
   }
 }

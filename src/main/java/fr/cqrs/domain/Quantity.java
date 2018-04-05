@@ -13,6 +13,10 @@ public class Quantity {
     return Quantity.of(quantity + toAdd.quantity);
   }
 
+  public int getQuantity() {
+    return quantity;
+  }
+
   public static Quantity of(int quantity) {
     return new Quantity(quantity);
   }

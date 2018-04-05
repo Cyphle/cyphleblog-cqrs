@@ -6,6 +6,7 @@ import fr.cqrs.domain.valueobjects.Name;
 import fr.cqrs.domain.valueobjects.Product;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
