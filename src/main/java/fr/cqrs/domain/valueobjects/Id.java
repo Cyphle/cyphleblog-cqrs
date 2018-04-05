@@ -26,4 +26,11 @@ public class Id {
 
     return Objects.hash(id);
   }
+
+  @Override
+  public String toString() {
+    return "Id{" +
+            "id='" + id + '\'' +
+            '}';
+  }
 }

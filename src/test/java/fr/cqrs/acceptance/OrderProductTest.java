@@ -6,7 +6,7 @@ import fr.cqrs.domain.command.GetTableCommand;
 import fr.cqrs.domain.command.GetTableCommandHandler;
 import fr.cqrs.domain.command.OrderProductCommand;
 import fr.cqrs.domain.command.OrderProductCommandHandler;
-import fr.cqrs.domain.query.GetTableBill;
+import fr.cqrs.domain.query.GetTableBillQuery;
 import fr.cqrs.domain.query.GetTableBillQueryHandler;
 import fr.cqrs.domain.query.SearchClientTableQuery;
 import fr.cqrs.domain.query.SearchClientTableQueryHandler;
@@ -36,6 +36,8 @@ public class OrderProductTest {
     tableRepository = new TableRepositoryImpl();
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
     searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
+    getTableBillQueryHandler = new GetTableBillQueryHandler(tableRepository);
 
     GetTableCommand command = new GetTableCommand(Name.of("John Doe"));
     getTableCommandHandler.handle(command);
@@ -50,7 +52,7 @@ public class OrderProductTest {
     OrderProductCommand command = new OrderProductCommand(table.getAggregateId(), Product.BEER);
     orderProductCommandHandler.handle(command);
     // Then
-    GetTableBill query = new GetTableBill(table.getAggregateId());
+    GetTableBillQuery query = new GetTableBillQuery(table.getAggregateId());
     List<Bill> bill = getTableBillQueryHandler.handle(query);
     assertThat(bill).hasSize(1);
     assertThat(bill.get(0).getEntries()).contains(

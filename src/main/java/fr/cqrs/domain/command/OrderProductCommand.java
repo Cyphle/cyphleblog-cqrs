@@ -11,4 +11,12 @@ public class OrderProductCommand implements Command {
     this.aggregateId = aggregateId;
     this.product = product;
   }
+
+  public Id getTableId() {
+    return aggregateId;
+  }
+
+  public Product getProduct() {
+    return product;
+  }
 }

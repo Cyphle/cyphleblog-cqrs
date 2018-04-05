@@ -1,16 +1,19 @@
 package fr.cqrs.domain.valueobjects;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class Bill {
-  private List<BillEntry> entries;
+  private Set<BillEntry> entries;
 
-  public Bill() {
-    this.entries = new ArrayList<>();
+  private Bill(Set<BillEntry> entries) {
+    this.entries = entries;
   }
 
-  public List<BillEntry> getEntries() {
+  public Set<BillEntry> getEntries() {
     return this.entries;
+  }
+
+  public static Bill of(Set<BillEntry> entries) {
+    return new Bill(entries);
   }
 }

@@ -2,6 +2,8 @@ package fr.cqrs.domain.valueobjects;
 
 import fr.cqrs.domain.Quantity;
 
+import java.util.Objects;
+
 public class BillEntry {
   private final Product product;
   private final Quantity quantity;
@@ -15,5 +17,21 @@ public class BillEntry {
 
   public static BillEntry of(Product product, Quantity quantity, Money price) {
     return new BillEntry(product, quantity, price);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BillEntry billEntry = (BillEntry) o;
+    return product == billEntry.product &&
+            Objects.equals(quantity, billEntry.quantity) &&
+            Objects.equals(price, billEntry.price);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(product, quantity, price);
   }
 }

@@ -1,17 +1,30 @@
 package fr.cqrs.domain.aggregate;
 
+import fr.cqrs.domain.Quantity;
 import fr.cqrs.domain.valueobjects.Id;
 import fr.cqrs.domain.valueobjects.Name;
+import fr.cqrs.domain.valueobjects.Product;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Table {
+  public static final Table UNOCCUPIED_TABLE = Table.of(Id.of(""), Name.of(""));
   private final Id id;
   private final Name clientName;
+  private final Map<Product, Quantity> products;
 
   private Table(Id id, Name clientName) {
     this.id = id;
     this.clientName = clientName;
+    this.products = new HashMap<>();
+  }
+
+  public Table(Id id, Name clientName, Map<Product, Quantity> products) {
+    this.id = id;
+    this.clientName = clientName;
+    this.products = products;
   }
 
   public Id getAggregateId() {
@@ -22,8 +35,24 @@ public class Table {
     return this.clientName.equals(clientName);
   }
 
+  public boolean is(Id tableId) {
+    return this.id.equals(tableId);
+  }
+
+  public void addOrder(Product product) {
+    this.products.merge(product, Quantity.of(1), Quantity::add);
+  }
+
+  public Map<Product, Quantity> getProducts() {
+    return products;
+  }
+
   public static Table of(Id id, Name clientName) {
     return new Table(id, clientName);
+  }
+
+  public static Table of(Id id, Name clientName, Map<Product, Quantity> products) {
+    return new Table(id, clientName, products);
   }
 
   @Override
@@ -32,11 +61,22 @@ public class Table {
     if (o == null || getClass() != o.getClass()) return false;
     Table table = (Table) o;
     return Objects.equals(id, table.id) &&
-            Objects.equals(clientName, table.clientName);
+            Objects.equals(clientName, table.clientName) &&
+            Objects.equals(products, table.products);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, clientName);
+
+    return Objects.hash(id, clientName, products);
+  }
+
+  @Override
+  public String toString() {
+    return "Table{" +
+            "id=" + id +
+            ", clientName=" + clientName +
+            ", products=" + products +
+            '}';
   }
 }
