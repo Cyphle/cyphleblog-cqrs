@@ -21,7 +21,7 @@ public class GetTableCommandHandler implements CommandHandler {
 
   public void handle(Command command) throws Exception {
     checkIfClientAlreadyHasATable((GetTableCommand) command);
-    Table table = Table.of(Id.of(this.idGenerator.generate()), ((GetTableCommand) command).getClientName());
+    Table table = Table.newTable(Id.of(idGenerator.generate()), ((GetTableCommand) command).getClientName());
     this.tableRepository.save(table);
   }
 

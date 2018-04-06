@@ -5,6 +5,8 @@ import fr.cqrs.command.commands.GetTableCommand;
 import fr.cqrs.command.handlers.GetTableCommandHandler;
 import fr.cqrs.command.commands.OrderProductCommand;
 import fr.cqrs.command.handlers.OrderProductCommandHandler;
+import fr.cqrs.infra.repositories.QueryRepository;
+import fr.cqrs.infra.repositories.QueryRepositoryImpl;
 import fr.cqrs.query.queries.GetTableOrdersQuery;
 import fr.cqrs.query.handlers.GetTableOrdersQueryHandler;
 import fr.cqrs.query.queries.SearchClientTableQuery;
@@ -29,15 +31,17 @@ public class OrderProductTest {
   private SearchClientTableQueryHandler searchClientTableQueryHandler;
   private OrderProductCommandHandler orderProductCommandHandler;
   private GetTableOrdersQueryHandler getTableOrdersQueryHandler;
+  private QueryRepository queryRepository;
 
   @Before
   public void setUp() throws Exception {
     idGenerator = new UUIDGenerator();
-    tableRepository = new TableRepositoryImpl();
+    queryRepository = new QueryRepositoryImpl();
+    tableRepository = new TableRepositoryImpl(queryRepository);
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
-    getTableOrdersQueryHandler = new GetTableOrdersQueryHandler(tableRepository);
+    getTableOrdersQueryHandler = new GetTableOrdersQueryHandler(queryRepository);
 
     GetTableCommand command = new GetTableCommand(Name.of("John Doe"));
     getTableCommandHandler.handle(command);

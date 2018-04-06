@@ -5,6 +5,7 @@ import fr.cqrs.command.valueobjects.Name;
 import fr.cqrs.command.valueobjects.Product;
 import fr.cqrs.common.Quantity;
 import fr.cqrs.command.aggregate.Table;
+import fr.cqrs.infra.repositories.QueryRepository;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.query.handlers.GetTableOrdersQueryHandler;
 import fr.cqrs.query.queries.GetTableOrdersQuery;
@@ -23,15 +24,13 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class GetTableOrdersQueryHandlerTest {
   @Mock
-  private TableRepository tableRepository;
+  private QueryRepository queryRepository;
   private GetTableOrdersQueryHandler getTableOrdersQueryHandler;
 
   @Before
   public void setUp() throws Exception {
-    given(tableRepository.getByAggregateId(Id.of("1"))).willReturn(
-            Table.of(Id.of("1"), Name.of("John Doe"), Maps.newHashMap(Product.BEER, Quantity.of(1)))
-    );
-    getTableOrdersQueryHandler = new GetTableOrdersQueryHandler(tableRepository);
+    given(queryRepository.getTableOrders(Id.of("1"))).willReturn(Maps.newHashMap(Product.BEER, Quantity.of(1)));
+    getTableOrdersQueryHandler = new GetTableOrdersQueryHandler(queryRepository);
   }
 
   @Test

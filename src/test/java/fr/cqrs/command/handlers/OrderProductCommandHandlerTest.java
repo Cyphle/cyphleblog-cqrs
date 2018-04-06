@@ -2,6 +2,8 @@ package fr.cqrs.command.handlers;
 
 import fr.cqrs.command.aggregate.Table;
 import fr.cqrs.command.commands.OrderProductCommand;
+import fr.cqrs.command.events.ProductAddedEvent;
+import fr.cqrs.command.events.TableOrderedEvent;
 import fr.cqrs.command.exceptions.TableNotFoundException;
 import fr.cqrs.command.handlers.OrderProductCommandHandler;
 import fr.cqrs.command.valueobjects.Id;
@@ -27,7 +29,9 @@ public class OrderProductCommandHandlerTest {
 
   @Before
   public void setUp() throws Exception {
-    given(tableRepository.getByAggregateId(Id.of("1"))).willReturn(Table.of(Id.of("1"), Name.of("John Doe")));
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), Name.of("John Doe")));
+    given(tableRepository.getByAggregateId(Id.of("1"))).willReturn(table);
     given(tableRepository.getByAggregateId(Id.of("2"))).willReturn(Table.UNOCCUPIED_TABLE);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
   }
@@ -39,7 +43,10 @@ public class OrderProductCommandHandlerTest {
     // When
     orderProductCommandHandler.handle(command);
     // Then
-    verify(tableRepository).save(Table.of(Id.of("1"), Name.of("John Doe"), Maps.newHashMap(Product.BEER, Quantity.of(1))));
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), Name.of("John Doe")));
+    table.apply(new ProductAddedEvent(Id.of("1"), Product.BEER));
+    verify(tableRepository).save(table);
   }
 
   @Test(expected = TableNotFoundException.class)

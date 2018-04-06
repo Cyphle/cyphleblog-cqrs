@@ -21,6 +21,10 @@ public class Quantity {
     return new Quantity(quantity);
   }
 
+  public void increment() {
+    ++quantity;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

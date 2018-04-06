@@ -1,5 +1,7 @@
 package fr.cqrs.acceptance;
 
+import fr.cqrs.infra.repositories.QueryRepository;
+import fr.cqrs.infra.repositories.QueryRepositoryImpl;
 import fr.cqrs.infra.repositories.TableRepositoryImpl;
 import fr.cqrs.command.aggregate.Table;
 import fr.cqrs.command.commands.GetTableCommand;
@@ -22,12 +24,14 @@ public class OrderTableTest {
   private GetTableCommandHandler getTableCommandHandler;
   private TableRepository tableRepository;
   private IdGenerator idGenerator;
+  private QueryRepository queryRepository;
 
   @Before
   public void setUp() throws Exception {
     idGenerator = new UUIDGenerator();
-    tableRepository = new TableRepositoryImpl();
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    queryRepository = new QueryRepositoryImpl();
+    tableRepository = new TableRepositoryImpl(queryRepository);
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
   }
 

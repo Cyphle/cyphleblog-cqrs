@@ -2,10 +2,12 @@ package fr.cqrs.command.handlers;
 
 import fr.cqrs.command.aggregate.Table;
 import fr.cqrs.command.commands.GetTableCommand;
+import fr.cqrs.command.events.TableOrderedEvent;
 import fr.cqrs.command.exceptions.ClientAlreadyHasTableException;
 import fr.cqrs.command.handlers.GetTableCommandHandler;
 import fr.cqrs.command.valueobjects.Client;
 import fr.cqrs.command.valueobjects.Id;
+import fr.cqrs.command.valueobjects.Name;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.utils.IdGenerator;
 import org.junit.Before;
@@ -41,15 +43,17 @@ public class GetTableCommandHandlerTest {
     // When
     getTableCommandHandler.handle(command);
     // Then
-    verify(tableRepository).save(Table.of(Id.of("1"), client.getName()));
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), client.getName()));
+    verify(tableRepository).save(table);
   }
 
   @Test(expected = ClientAlreadyHasTableException.class)
   public void should_throw_exception_if_client_already_has_a_table() throws Exception {
     // Given
-    given(tableRepository.getAllTables()).willReturn(Collections.singletonList(
-            Table.of(Id.of("1"), Client.withName("John Doe").getName())
-    ));
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), Name.of("John Doe")));
+    given(tableRepository.getAllTables()).willReturn(Collections.singletonList(table));
     Client client = Client.withName("John Doe");
     GetTableCommand command = new GetTableCommand(client.getName());
     // When

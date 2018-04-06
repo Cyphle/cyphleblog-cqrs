@@ -1,8 +1,10 @@
 package fr.cqrs.query.handlers;
 
 import fr.cqrs.command.aggregate.Table;
+import fr.cqrs.command.events.TableOrderedEvent;
 import fr.cqrs.command.valueobjects.Client;
 import fr.cqrs.command.valueobjects.Id;
+import fr.cqrs.infra.repositories.QueryRepository;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.query.handlers.SearchClientTableQueryHandler;
 import fr.cqrs.query.queries.SearchClientTableQuery;
@@ -21,13 +23,15 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class SearchClientTableQueryHandlerTest {
   @Mock
-  private TableRepository tableRepository;
+  private QueryRepository queryRepository;
   private SearchClientTableQueryHandler searchClientTableQueryHandler;
 
   @Before
   public void setUp() throws Exception {
-    given(tableRepository.getAllTables()).willReturn(Collections.singletonList(Table.of(Id.of("1"), Client.withName("John Doe").getName())));
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), Client.withName("John Doe").getName()));
+    given(queryRepository.getClientTable(Client.withName("John Doe").getName())).willReturn(table);
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
   }
 
   @Test
@@ -38,7 +42,9 @@ public class SearchClientTableQueryHandlerTest {
     // When
     List<Table> tables = searchClientTableQueryHandler.handle(query);
     // Then
+    Table table = new Table();
+    table.apply(new TableOrderedEvent(Id.of("1"), Client.withName("John Doe").getName()));
     assertThat(tables).hasSize(1);
-    assertThat(tables.get(0)).isEqualTo(Table.of(Id.of("1"), Client.withName("John Doe").getName()));
+    assertThat(tables.get(0)).isEqualTo(table);
   }
 }

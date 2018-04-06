@@ -7,6 +7,8 @@ import fr.cqrs.command.commands.GetTableCommand;
 import fr.cqrs.command.handlers.GetTableCommandHandler;
 import fr.cqrs.command.commands.OrderProductCommand;
 import fr.cqrs.command.handlers.OrderProductCommandHandler;
+import fr.cqrs.infra.repositories.QueryRepository;
+import fr.cqrs.infra.repositories.QueryRepositoryImpl;
 import fr.cqrs.query.queries.GetTableBillQuery;
 import fr.cqrs.query.handlers.GetTableBillQueryHandler;
 import fr.cqrs.query.queries.SearchClientTableQuery;
@@ -18,7 +20,9 @@ import fr.cqrs.utils.UUIDGenerator;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,15 +33,17 @@ public class OrderBillTest {
   private SearchClientTableQueryHandler searchClientTableQueryHandler;
   private OrderProductCommandHandler orderProductCommandHandler;
   private GetTableBillQueryHandler getTableBillQueryHandler;
+  private QueryRepository queryRepository;
 
   @Before
   public void setUp() throws Exception {
     idGenerator = new UUIDGenerator();
-    tableRepository = new TableRepositoryImpl();
+    queryRepository = new QueryRepositoryImpl();
+    tableRepository = new TableRepositoryImpl(queryRepository);
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
-    getTableBillQueryHandler = new GetTableBillQueryHandler(tableRepository);
+    getTableBillQueryHandler = new GetTableBillQueryHandler(queryRepository);
 
     GetTableCommand command = new GetTableCommand(Name.of("John Doe"));
     getTableCommandHandler.handle(command);
@@ -55,7 +61,7 @@ public class OrderBillTest {
     GetTableBillQuery query = new GetTableBillQuery(table.getAggregateId());
     List<Bill> bill = getTableBillQueryHandler.handle(query);
     assertThat(bill).hasSize(1);
-    assertThat(bill.get(0).getEntries()).contains(
+    assertThat(bill.get(0).getEntries().values()).contains(
             BillEntry.of(Product.BEER, Quantity.of(1), Money.of(6))
     );
   }

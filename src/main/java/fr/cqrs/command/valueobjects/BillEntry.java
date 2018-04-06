@@ -19,6 +19,10 @@ public class BillEntry {
     return new BillEntry(product, quantity, price);
   }
 
+  public void increment() {
+    quantity.increment();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

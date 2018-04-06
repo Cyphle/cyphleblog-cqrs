@@ -6,6 +6,8 @@ import fr.cqrs.command.commands.OrderProductCommand;
 import fr.cqrs.command.handlers.GetTableCommandHandler;
 import fr.cqrs.command.handlers.OrderProductCommandHandler;
 import fr.cqrs.command.valueobjects.Money;
+import fr.cqrs.infra.repositories.QueryRepository;
+import fr.cqrs.infra.repositories.QueryRepositoryImpl;
 import fr.cqrs.infra.repositories.TableRepository;
 import fr.cqrs.infra.repositories.TableRepositoryImpl;
 import fr.cqrs.query.handlers.GetTurnoverOfMonthQueryHandler;
@@ -38,13 +40,15 @@ public class GetTurnoverTest {
   private OrderProductCommandHandler orderProductCommandHandler;
   private GetTurnoverOfMonthQueryHandler getTurnoverOfMonthQueryHandler;
   private TableRepository tableRepository;
+  private QueryRepository queryRepository;
 
   @Before
   public void setUp() throws Exception {
-    tableRepository = new TableRepositoryImpl();
+    queryRepository = new QueryRepositoryImpl();
+    tableRepository = new TableRepositoryImpl(queryRepository);
 
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
-    searchClientTableQueryHandler = new SearchClientTableQueryHandler(tableRepository);
+    searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
     getTurnoverOfMonthQueryHandler = new GetTurnoverOfMonthQueryHandler();
   }
