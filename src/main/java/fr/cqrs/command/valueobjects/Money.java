@@ -9,6 +9,10 @@ public class Money {
     this.value = value;
   }
 
+  public Money add(Money b) {
+    return Money.of(value + b.value);
+  }
+
   public static Money of(double value) {
     return new Money(value);
   }

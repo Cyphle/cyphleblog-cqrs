@@ -8,7 +8,9 @@ import fr.cqrs.command.valueobjects.Id;
 import fr.cqrs.command.valueobjects.Name;
 import fr.cqrs.command.valueobjects.Product;
 import fr.cqrs.common.Quantity;
+import fr.cqrs.query.valueobjects.HistoryEntry;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +22,6 @@ public interface QueryRepository {
   Map<Product, Quantity> getTableOrders(Id tableId) throws TableNotFoundException;
 
   Bill getBillOf(Id tableId);
+
+  List<HistoryEntry> getHistoryOfMonth(int year, Month month);
 }

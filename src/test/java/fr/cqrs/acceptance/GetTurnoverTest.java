@@ -30,6 +30,7 @@ import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetTurnoverTest {
@@ -44,13 +45,14 @@ public class GetTurnoverTest {
 
   @Before
   public void setUp() throws Exception {
+    given(idGenerator.generate()).willReturn("1");
     queryRepository = new QueryRepositoryImpl();
     tableRepository = new TableRepositoryImpl(queryRepository);
 
     getTableCommandHandler = new GetTableCommandHandler(tableRepository, idGenerator);
     searchClientTableQueryHandler = new SearchClientTableQueryHandler(queryRepository);
     orderProductCommandHandler = new OrderProductCommandHandler(tableRepository);
-    getTurnoverOfMonthQueryHandler = new GetTurnoverOfMonthQueryHandler();
+    getTurnoverOfMonthQueryHandler = new GetTurnoverOfMonthQueryHandler(queryRepository);
   }
 
   @Test

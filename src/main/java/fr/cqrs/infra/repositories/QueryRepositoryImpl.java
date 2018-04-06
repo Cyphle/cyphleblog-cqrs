@@ -10,16 +10,21 @@ import fr.cqrs.command.valueobjects.Id;
 import fr.cqrs.command.valueobjects.Name;
 import fr.cqrs.command.valueobjects.Product;
 import fr.cqrs.common.Quantity;
+import fr.cqrs.query.valueobjects.HistoryEntry;
 
+import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QueryRepositoryImpl implements QueryRepository {
   private List<Table> tables;
   private Map<String, Bill> bills;
+  private List<HistoryEntry> history;
 
   public QueryRepositoryImpl() {
     tables = new ArrayList<>();
     bills = new HashMap<>();
+    history = new ArrayList<>();
   }
 
   @Override
@@ -32,6 +37,7 @@ public class QueryRepositoryImpl implements QueryRepository {
       case "ProductAddedEvent":
         projectOrder((ProductAddedEvent) event);
         projectBill((ProductAddedEvent) event);
+        projectHistory((ProductAddedEvent) event);
         break;
     }
   }
@@ -58,6 +64,14 @@ public class QueryRepositoryImpl implements QueryRepository {
     return bills.get(tableId.getId());
   }
 
+  @Override
+  public List<HistoryEntry> getHistoryOfMonth(int year, Month month) {
+    return history
+            .stream()
+            .filter(entry -> entry.getYear() == year && entry.getMonth().equals(month))
+            .collect(Collectors.toList());
+  }
+
   private void projectBill(TableOrderedEvent event) {
     bills.put(event.getAggregateId(), Bill.of(new HashMap<>()));
   }
@@ -74,6 +88,10 @@ public class QueryRepositoryImpl implements QueryRepository {
   private void projectOrder(ProductAddedEvent event) {
     Table table = this.getTableById(Id.of(event.getAggregateId()));
     table.apply(event);
+  }
+
+  private void projectHistory(ProductAddedEvent event) {
+    history.add(HistoryEntry.of(2018, Month.MARCH, 5, event.getProduct(), event.getAggregateId()));
   }
 
   private Table getTableById(Id id) {

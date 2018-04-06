@@ -10,4 +10,12 @@ public class GetTurnoverOfMonthQuery implements Query {
     this.year = year;
     this.month = month;
   }
+
+  public int getYear() {
+    return year;
+  }
+
+  public Month getMonth() {
+    return month;
+  }
 }
