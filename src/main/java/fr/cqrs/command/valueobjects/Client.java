@@ -3,8 +3,8 @@ package fr.cqrs.command.valueobjects;
 public class Client {
   private Name clientName;
 
-  private Client(String clientName) {
-    this.clientName = Name.of(clientName);
+  private Client(Name clientName) {
+    this.clientName = clientName;
   }
 
   public Name getName() {
@@ -12,6 +12,6 @@ public class Client {
   }
 
   public static Client withName(String name) {
-    return new Client(name);
+    return new Client(Name.of(name));
   }
 }
